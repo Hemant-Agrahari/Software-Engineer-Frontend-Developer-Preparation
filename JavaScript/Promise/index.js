@@ -38,6 +38,51 @@ anotherPromise
 // error message. The `then` method is used to handle the success case, while the `catch` method handles the error case.
 
 // //Implement Promise chaining with multiple asynchronous tasks.
+function task1() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Task 1 complete');
+      resolve(1);
+    }, 1000);
+  });
+}
+
+function task2(input) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(`Task 2 complete, received input: ${input}`);
+      resolve(input + 2);
+    }, 1000);
+  });
+}
+
+function task3(input) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(`Task 3 complete, received input: ${input}`);
+      resolve(input * 3);
+    }, 1000);
+  });
+}
+
+// Promise chaining
+task1()
+  .then(result1 => {
+    return task2(result1);
+  })
+  .then(result2 => {
+    return task3(result2);
+  })
+  .then(finalResult => {
+    console.log(`Final result: ${finalResult}`); // Should log 9 ((1 + 2) * 3)
+  })
+  .catch(error => {
+    console.error('Error occurred:', error);
+  });
+
+
+// Simulate asynchronous tasks with Promises
+
 // Write a basic Promise that resolves or rejects based on a condition.
 
 // Implement Promise chaining with multiple asynchronous tasks.
