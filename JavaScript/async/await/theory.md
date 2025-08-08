@@ -80,18 +80,81 @@ Here’s how async/await enhances readability and code clarity:
 Q.How can you run multiple asynchronous tasks concurrently using async/await?
 Ans:You can run multiple asynchronous tasks concurrently using async/await by leveraging Promise.all(). This method takes an array of promises and returns a single Promise that resolves when all input promises resolve. Using Promise.all in combination with async/await lets you start all tasks simultaneously and then wait for all of them to finish, improving performance compared to awaiting each task sequentially.
 
-How to run async tasks concurrently with async/await:
+Q.How to run async tasks concurrently with async/await:
 1.Start all async functions without awaiting immediately—they start running in parallel.
 2.Use await Promise.all([...]) to wait for all started Promises to resolve.
 3.The result is an array with each Promise's resolved value in order.
 
 Q.What is the difference between sequential and concurrent execution with async/await? Provide examples.
+Ans:
+Sequential execution and concurrent execution with async/await are patterns for handling asynchronous operations, each with distinct characteristics and use cases.
+
+Sequential Execution
+a.Definition: Each asynchronous operation waits for the previous one to finish before starting.
+b.Mechanism: You use await one after another—the next statement won't execute until the previous awaited task completes.
+c.When to use: When operations depend on each other's results or must happen in order (for example, fetching a user before fetching their orders).
+
+Concurrent Execution
+a.Definition: Multiple asynchronous operations start together (or nearly so) and run independently.
+b.Mechanism: Start all operations, collect their promises, and then use await Promise.all([...]) to wait for all to finish.
+c.When to use: When tasks don't depend on each other and can run in parallel for higher efficiency (for example, making several independent API calls).
+
 
 Q.How do you handle multiple Promises with async/await and Promise.all?
+Ans:To handle multiple Promises with async/await and Promise.all in JavaScript, initiate all asynchronous operations at once, collect their promises in an array, and then use await Promise.all(arrayOfPromises) to wait for them to resolve together.
+
+Promise.all takes an array (or any iterable) of Promises and returns a single Promise.
+This returned Promise resolves when all listed Promises resolve, with an array of their results, preserving the order of the input array.
+If any input Promise rejects, the returned Promise immediately rejects with the first rejection reason.
+
+When to use: Use Promise.all when tasks are independent, and you want the function to continue only once all are done; all results are needed before proceeding.
 
 Q.What happens if an awaited Promise rejects? How can you catch such errors?
+Ans:When an awaited Promise rejects in an async function, the rejection behaves like a thrown error at the point of the await statement. If that error isn’t handled, it will cause the async function to immediately throw and return a rejected Promise with the error.
+
+How to catch such errors:
+You use a try...catch block in your async function to catch and handle errors from awaited Promises
+
 
 Q.What are the advantages and potential pitfalls of using async/await?
+Ans:
+Advantages of Using async/await
+1.Readability & Maintainability: Code using async/await looks and behaves more like synchronous code, making complex asynchronous flows easier to understand and maintain.
+
+2.Structured Error Handling: Enables clear use of try...catch blocks for error handling with asynchronous code, improving robustness—unlike traditional Promises where errors may propagate in unexpected ways.
+
+3.Debugging Ease: Debuggers can step through async/await code more naturally than Promise chains, making debugging less confusing.
+
+4.Composition: Async functions can return values or other Promises, making them easy to compose and reuse for higher-level tasks.
+
+5.Avoids Callback Hell: Eliminates deeply nested callbacks and awkward Promise chaining, leading to flatter, clearer function bodies.
+
+Potential Pitfalls of async/await
+1.Sequential Instead of Parallel Execution: If you use multiple await statements in series for independent tasks, they run sequentially. This can be much slower than running them concurrently with Promise.all.
+
+Example:
+
+javascript
+await task1();
+await task2(); // Waits for task1 to finish
+If these can run together, use:
+
+javascript
+await Promise.all([task1(), task2()]);
+Error Handling Can Be Overlooked: Forgetting to wrap await operations in try...catch blocks can lead to uncaught promise rejections that crash the function or propagate unexpected errors.
+
+Not Suitable for Non-Promise APIs: await only works with Promises; using it with plain values will wrap them in a resolved Promise, which may introduce subtle bugs if not understood.
+
+Blocking UI (in UI frameworks): Excessive use of await on long-running operations in the main/UI thread can block UI responsiveness, leading to jank or freezes.
+
+Limited Parallelism Control: While possible, explicit parallel execution requires manual orchestration; it's easy to unintentionally serialize operations that could run in parallel.
+
+Stack Traces May Be Less Informative: Some JS engines provide less-detailed stack traces with async/await compared to traditional synchronous code, making some errors harder to track.
+
+In Summary
+Async/await brings much-needed clarity and power to asynchronous programming, improving code readability and maintainability. However, it requires good understanding and disciplined usage to avoid performance pitfalls and guarantee robust error handling. Use it wisely for the best of both worlds.
+
+
 
 Q.How does async/await impact the JavaScript event loop and microtask queue?
 
